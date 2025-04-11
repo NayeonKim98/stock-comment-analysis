@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Public Opinion</title>
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="bg-light text-dark">
+
+  <!-- 🔵 심플하고 감성적인 네비게이션 바 -->
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm">
+    <div class="container-fluid px-4">
+
+      <!-- 🧠 브랜드 로고 -->
+      <a class="navbar-brand fw-bold text-primary fs-4" href="{% url 'crawlings:index' %}">
+        📊 Public Opinion
+      </a>
+
+      <!-- 📱 모바일용 버튼 -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- 🔗 네비 메뉴 -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav gap-2 align-items-center">
+
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link text-dark" href="{% url 'accounts:profile' user.username %}">
+                👤 프로필
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-dark" href="{% url 'accounts:logout' %}">
+                🔓 로그아웃
+              </a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link text-dark" href="{% url 'accounts:signup' %}">
+                📝 회원가입
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-dark" href="{% url 'accounts:login' %}">
+                🔐 로그인
+              </a>
+            </li>
+          {% endif %}
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 🧱 메인 콘텐츠 -->
+  <main class="container mt-5">
+    {% block content %}{% endblock content %}
+  </main>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
