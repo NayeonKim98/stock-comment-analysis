@@ -2,7 +2,6 @@
 {% load custom_filters %}
 
 {% block content %}
-
 <div class="container mt-5">
 
   <!-- 🔍 헤더 -->
@@ -33,63 +32,79 @@
     </form>
   </div>
 
+  <!-- 📊 댓글 요약 -->
   <div class="container">
     {% if analysis %}
-    <div class="analysis-container">
-      <h4><b>{{ company_name }}</b> 댓글 요약</h4>
-      <div class="mt-3">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">전체 여론:
-              {% if "전체 여론: 부정" in analysis.analysis_result %}
-                  <span class="text-danger">부정 ❌</span>
-              {% elif "전체 여론: 긍정" in analysis.analysis_result %}
-                  <span class="text-success">긍정 ✅</span>
-              {% else %}
-                  <span>중립 🤔</span>
-              {% endif %}
-            </h5>
-            <p class="card-text"><b>긍정적 키워드:</b>
-              {% for keyword in analysis.analysis_result|stringformat:'s'|split:'긍정적 키워드:'|last|split:'부정적 키워드:'|first|split:',' %}
-                  <span class="badge bg-success">{{ keyword|trim }}</span>
-              {% endfor %}
+    <div class="analysis-container mb-5">
+      <h4 class="fw-bold text-dark mb-3"><span class="text-primary">{{ company_name }}</span> 댓글 요약</h4>
+      <div class="card shadow-sm border-0 rounded-4 bg-light">
+        <div class="card-body">
+
+          <h5 class="card-title fs-5 mb-3">전체 여론:
+            {% if "전체 여론: 부정" in analysis.analysis_result %}
+              <span class="text-danger fw-bold">부정 ❌</span>
+            {% elif "전체 여론: 긍정" in analysis.analysis_result %}
+              <span class="text-success fw-bold">긍정 ✅</span>
+            {% else %}
+              <span class="text-secondary fw-bold">중립 🤔</span>
+            {% endif %}
+          </h5>
+
+          <!-- ✅ 긍정 키워드 -->
+          <p class="card-text mb-2"><b class="text-success">✅ 긍정 키워드:</b>
+            {% for keyword in analysis.analysis_result|stringformat:'s'|split:'긍정적 키워드:'|last|split:'부정적 키워드:'|first|split:',' %}
+              <span class="badge bg-success fs-5 px-3 py-2 rounded-pill me-2">
+                {{ keyword|trim|cut:"."|cut:"0"|cut:"1"|cut:"2"|cut:"3"|cut:"4"|cut:"5"|cut:"6"|cut:"7"|cut:"8"|cut:"9" }}
+              </span>
+            {% endfor %}
           </p>
-          <p class="card-text"><b>부정적 키워드:</b>
-              {% for keyword in analysis.analysis_result|stringformat:'s'|split:'부정적 키워드:'|last|split:'종합 분석 요약:'|first|split:',' %}
-                  <span class="badge bg-danger">{{ keyword|trim }}</span>
-              {% endfor %}
+
+          <!-- 🚫 부정 키워드 -->
+          <p class="card-text"><b class="text-danger">❌ 부정 키워드:</b>
+            {% for keyword in analysis.analysis_result|stringformat:'s'|split:'부정적 키워드:'|last|split:'종합 분석 요약:'|first|split:',' %}
+              <span class="badge bg-danger fs-5 px-3 py-2 rounded-pill me-2">
+                {{ keyword|trim|cut:"."|cut:"0"|cut:"1"|cut:"2"|cut:"3"|cut:"4"|cut:"5"|cut:"6"|cut:"7"|cut:"8"|cut:"9" }}
+              </span>
+            {% endfor %}
           </p>
-          
-          </div>
+
         </div>
       </div>
     </div>
-    {% else %}
-    <p>아직 분석 결과가 없습니다.</p>
     {% endif %}
   </div>
 
+  <!-- 💬 댓글 상세 -->
   <div class="mt-5">
-    <h4>댓글 상세</h4>
-    <div class="container mt-3">
+    <h4 class="fw-bold fs-3 mb-4">💬 댓글 상세</h4>
+    <div class="container">
       {% if comments %}
-      <ul>
-        {% for comment in comments %}
-        <div class="d-flex justify-content-between pb-2 comment-item">
-          <div>
-            <li>{{ comment.comment }}</li>
-          </div>
-          <div>
-            <form action="{% url "crawlings:delete_comment" comment.pk %}" method="post">
-              {% csrf_token %}
-              <input class="btn btn-danger py-1" type="submit" value="삭제">
-            </form>
-          </div>
+        <div class="d-flex flex-column gap-4">
+          {% for comment in comments %}
+            <div class="bg-white p-4 rounded-4 shadow-sm border-start border-5 border-primary-subtle">
+
+              <!-- 🗣️ 텍스트 + 아이콘 -->
+              <div class="d-flex align-items-start gap-3">
+                <span class="fs-3">🗣️</span>
+                <p class="mb-0 fs-5 text-dark" style="white-space: pre-line;">{{ comment.comment }}</p>
+              </div>
+
+              <!-- 삭제 버튼을 아래쪽으로! -->
+              <div class="text-end mt-3">
+                <form action="{% url "crawlings:delete_comment" comment.pk %}" method="post">
+                  {% csrf_token %}
+                  <input class="btn btn-outline-danger btn-sm fw-bold px-3 py-1" type="submit" value="삭제">
+                </form>
+              </div>
+
+            </div>
+          {% endfor %}
         </div>
-        {% endfor %}
-      </ul>
+      {% else %}
+        <p class="text-muted fs-5">아직 등록된 댓글이 없습니다.</p>
+      {% endif %}
     </div>
   </div>
-  {% endif %}
+
 </div>
 {% endblock content %}

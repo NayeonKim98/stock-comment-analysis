@@ -3,28 +3,44 @@
 
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center vh-100">
-  <div class="card shadow-lg p-4" style="min-width: 400px;">
-    
-    <h2 class="text-center mb-4">🔐 로그인</h2>
+  <div class="card shadow-lg p-5 rounded-4 border-0 bg-light" style="min-width: 400px; max-width: 500px;">
 
-    <!-- 로그인 폼 -->
-    <form method="POST" novalidate>
+    <!-- 타이틀 -->
+    <div class="text-center mb-4">
+      <h2 class="fw-bold display-6 mb-2">🔐 로그인</h2>
+      <p class="text-muted fs-5">Public Opinion에 다시 오신 걸 환영합니다!</p>
+      <hr class="w-50 mx-auto">
+    </div>
+
+    <form method="POST" novalidate class="fs-5" style="line-height: 1.8;">
       {% csrf_token %}
-
-      <div class="mb-3">
-        <label for="username" class="form-label">👤 사용자 이름</label>
-        <input type="text" name="username" id="username" class="form-control" placeholder="아이디를 입력하세요" required>
-      </div>
-
+    
+      <!-- 사용자 이름 -->
       <div class="mb-4">
-        <label for="password" class="form-label">🔒 비밀번호</label>
-        <input type="password" name="password" id="password" class="form-control" placeholder="비밀번호를 입력하세요" required>
+        <label for="username" class="form-label fw-semibold d-flex align-items-center gap-2">
+          <span class="fs-5">👤</span>
+          <span>사용자 이름</span>
+        </label>
+        <input type="text" name="username" id="username" class="form-control form-control-lg" placeholder="아이디를 입력하세요" required>
       </div>
-
-      <button type="submit" class="btn btn-primary w-100">로그인</button>
+    
+      <!-- 비밀번호 -->
+      <div class="mb-4">
+        <label for="password" class="form-label fw-semibold d-flex align-items-center gap-2">
+          <span class="fs-5">🔒</span>
+          <span>비밀번호</span>
+        </label>
+        <input type="password" name="password" id="password" class="form-control form-control-lg" placeholder="비밀번호를 입력하세요" required>
+      </div>
+    
+      <!-- 버튼 -->
+      <button type="submit" class="btn btn-primary w-100 py-3 fs-5 fw-bold shadow-sm">
+        🚀 로그인
+      </button>
     </form>
+    
 
-    <!-- 알림 메시지 -->
+    <!-- 메시지 출력 -->
     {% if messages %}
       <div class="mt-4">
         {% for message in messages %}
